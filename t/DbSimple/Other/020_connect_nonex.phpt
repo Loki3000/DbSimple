@@ -19,10 +19,9 @@ function databaseErrorHandler($message, $info)
 	$dir = __DIR__. '/';
 	$rpath = str_replace($dir, '', $info['context']);
 	echo "Error: ".$info['message']."\n";
-	echo "Context: ".$rpath."\n";
+	//echo "Context: ".$rpath."\n";
 	exit();
 }
 ?>
 --EXPECT--
 Error: Access denied for user 'test'@'localhost' to database 'non-existed-db'
-Context: Standard input code line 6
