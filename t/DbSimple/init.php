@@ -43,7 +43,7 @@ function queryLogger(&$DB, $query)
 
 function errorHandler($msg, $error)
 {
-	if (!error_reporting()) return;
+	if (!error_reporting() || 4437==error_reporting()) return;
 	printr($error['message'], "Error");
 }
 

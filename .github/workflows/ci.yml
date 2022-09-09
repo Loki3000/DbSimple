@@ -11,6 +11,14 @@ jobs:
         operating-system: ['ubuntu-latest']
         php-versions: ['7.4', '8.0', '8.1']
     
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+
     steps:
       - uses: actions/checkout@v2
 

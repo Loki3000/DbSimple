@@ -7,12 +7,11 @@ require_once __DIR__ . '/../init.php';
 
 function main(&$DB)
 {
-    error_reporting(0);
-    $DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d } AND c = ?d", 1, 3);
-    $DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d } AND c = ?d", DBSIMPLE_SKIP, 3);
-    $DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d { AND b=?d } } AND c = ?d", 1, 2, 3);
-    $DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d { AND b=?d } } AND c = ?d", 1, DBSIMPLE_SKIP, 3);
-    $DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d { AND b=?d } } AND c = ?d", DBSIMPLE_SKIP, 2, 3);
+    @$DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d } AND c = ?d", 1, 3);
+    @$DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d } AND c = ?d", DBSIMPLE_SKIP, 3);
+    @$DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d { AND b=?d } } AND c = ?d", 1, 2, 3);
+    @$DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d { AND b=?d } } AND c = ?d", 1, DBSIMPLE_SKIP, 3);
+    @$DB->query("SELECT * FROM t1 WHERE 1 { AND a = ?d { AND b=?d } } AND c = ?d", DBSIMPLE_SKIP, 2, 3);
 }
 
 ?>

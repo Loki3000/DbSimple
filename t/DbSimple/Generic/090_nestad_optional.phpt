@@ -7,9 +7,8 @@ require_once __DIR__ . '/../init.php';
 
 function main(&$DB)
 {
-    error_reporting(0);
-    $DB->query('SELECT * FROM t1 {?WHERE a=1}',1);
-    $DB->query('SELECT * FROM t1 {?WHERE a=1}',DBSIMPLE_SKIP);
+    @$DB->query('SELECT * FROM t1 {?WHERE a=1}',1);
+    @$DB->query('SELECT * FROM t1 {?WHERE a=1}',DBSIMPLE_SKIP);
 }
 
 ?>

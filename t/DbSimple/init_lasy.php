@@ -41,11 +41,11 @@ function queryLogger(&$DB, $query)
 
 function errorHandler($msg, $error)
 {
-	if (!error_reporting()) return;
+	if (!error_reporting() || 4437==error_reporting()) return;
 	$dir = __DIR__. '/';
 	$rpath = str_replace($dir, '', $error['context']);
 	printr($error['message'], "Error");
-	printr($rpath, "Context");
+	//printr($rpath, "Context");
 }
 
 // Debug human-readable output of any variable.

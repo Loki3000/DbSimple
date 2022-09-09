@@ -39,7 +39,7 @@ class DbSimple_Mypdo extends DbSimple_Database
 
             if (version_compare(PHP_VERSION, '5.3.6') < 0) {
                 $phpNew = false;
-                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
+                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . (!empty($dsn['charset']) ? $dsn['charset'] : 'utf8');
             } else {
                 $phpNew = true;
             }
@@ -51,7 +51,7 @@ class DbSimple_Mypdo extends DbSimple_Database
                         . ';dbname=' . $base;
 
                 if ($phpNew) {
-                    $dsnPdo .= ';charset=' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
+                    $dsnPdo .= ';charset=' . (!empty($dsn['charset']) ? $dsn['charset'] : 'utf8');
                 }
 
                 $this->link = new PDO(
@@ -68,7 +68,7 @@ class DbSimple_Mypdo extends DbSimple_Database
                         . ';dbname=' . $base;
 
                 if ($phpNew) {
-                    $dsnPdo .= ';charset=' . (!empty($dsn['enc']) ? $dsn['enc'] : 'utf8');
+                    $dsnPdo .= ';charset=' . (!empty($dsn['charset']) ? $dsn['charset'] : 'utf8');
                 }
 
                 $this->link = new PDO(

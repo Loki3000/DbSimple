@@ -195,6 +195,9 @@ class DbSimple_Postgresql extends DbSimple_Database
         if ($result === false) return $this->_setDbError($queryMain);
         if (!pg_num_fields($result)) {
             if ($isInsert) {
+                if ($returning=$this->_performFetch($result)) {
+                    return $returning;
+                }
                 // INSERT queries return generated OID (if table is WITH OIDs).
                 //
                 // Please note that unfortunately we cannot use lastval() PostgreSQL
@@ -207,7 +210,7 @@ class DbSimple_Postgresql extends DbSimple_Database
                 //   $insertedId = $DB->query("SELECT lastval()")
                 // manually where it is really needed.
                 //
-                return @pg_last_oid($result);
+                //return @pg_last_oid($result);
             }
             // Non-SELECT queries return number of affected rows, SELECT - resource.
             return @pg_affected_rows($result);

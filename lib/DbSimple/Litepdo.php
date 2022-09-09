@@ -34,7 +34,7 @@ class DbSimple_Litepdo extends DbSimple_Database
 		} catch (PDOException $e) {
 			$this->_setLastError($e->getCode() , $e->getMessage(), 'new PDO');
 		}
-		$this->link->exec('SET NAMES '.(isset($dsn['enc'])?$dsn['enc']:'UTF8'));
+		$this->link->exec('SET NAMES '.(isset($dsn['charset'])?$dsn['charset']:'UTF8'));
 	}
 
 	public function CreateFunction($function_name, $callback, $num_args)

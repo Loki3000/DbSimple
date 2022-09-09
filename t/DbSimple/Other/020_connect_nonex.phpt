@@ -15,7 +15,7 @@ $DATABASE->setErrorHandler('databaseErrorHandler');
 function databaseErrorHandler($message, $info)
 {
 	// Если использовалась @, ничего не делать.
-	if (!error_reporting()) return;
+	if (!error_reporting() || 4437==error_reporting()) return;
 	$dir = __DIR__. '/';
 	$rpath = str_replace($dir, '', $info['context']);
 	echo "Error: ".$info['message']."\n";

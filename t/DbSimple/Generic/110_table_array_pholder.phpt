@@ -7,34 +7,32 @@ require_once __DIR__ . '/../init.php';
 
 function main(&$DB)
 {
-    error_reporting(0);
-
     $DB->setIdentPrefix('pre_');
 
-    $DB->query('SELECT * FROM t1 WHERE 1=1{ AND a IN (?a)}',array());
-    $DB->query('SELECT * FROM ?_t1 WHERE a IN (?a)', array('1','2','3'));
-    $DB->query('UPDATE ?_t1 SET ?a WHERE a IN (?a)', array('a'=>'1'), array('1','2','3'));
-    $DB->query('UPDATE ?_t1 SET ?a WHERE a IN (?a)', array('a'=>'1', 'b'=>2), array('1','2','3'));
-    $DB->query('UPDATE ?_t1 SET ?a WHERE a IN (?a)', array(
+    @$DB->query('SELECT * FROM t1 WHERE 1=1{ AND a IN (?a)}',array());
+    @$DB->query('SELECT * FROM ?_t1 WHERE a IN (?a)', array('1','2','3'));
+    @$DB->query('UPDATE ?_t1 SET ?a WHERE a IN (?a)', array('a'=>'1'), array('1','2','3'));
+    @$DB->query('UPDATE ?_t1 SET ?a WHERE a IN (?a)', array('a'=>'1', 'b'=>2), array('1','2','3'));
+    @$DB->query('UPDATE ?_t1 SET ?a WHERE a IN (?a)', array(
         '?_t' => array('a' => 1, 'b' => 2),
         't2' => array('a' => 3)
     ), array('1','2','3'));
-    $DB->query('INSERT INTO t1(a,b,c) VALUES (?a)',array(
+    @$DB->query('INSERT INTO t1(a,b,c) VALUES (?a)',array(
         array('a'=>1,2,3),
         array(4,'b'=>5,6),
         array(7,8,'c'=>9),
     ));
-    $DB->query('SELECT * FROM t1 WHERE (?&)',array(
+    @$DB->query('SELECT * FROM t1 WHERE (?&)',array(
         array('a'=>1, 'b'=>2),
         array('c'=>3, 'd'=>4),
     ));
-    $DB->query('SELECT * FROM t1 WHERE (?|)',array(
+    @$DB->query('SELECT * FROM t1 WHERE (?|)',array(
         'a'=>1,
         array('a'=>1, 'b'=>2),
         array('c'=>3, 'd'=>4),
     ));
-    $DB->query('SELECT * FROM t1 WHERE (?|)', array('a'=>1, 'b'=>2));
-    $DB->query('SELECT * FROM t1 WHERE (?&)', array('a'=>1, 'b'=>2));
+    @$DB->query('SELECT * FROM t1 WHERE (?|)', array('a'=>1, 'b'=>2));
+    @$DB->query('SELECT * FROM t1 WHERE (?&)', array('a'=>1, 'b'=>2));
 }
 
 ?>
