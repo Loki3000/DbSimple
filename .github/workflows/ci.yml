@@ -35,5 +35,8 @@ jobs:
           extensions: mysql
           tools: phpunit/phpunit:9.5
 
+      - name: Wait for MySQL
+          run: sleep 15
+
       - name: PHPUnit Tests
         run: phpunit
