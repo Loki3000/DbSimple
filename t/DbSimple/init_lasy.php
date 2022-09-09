@@ -1,6 +1,8 @@
 <?php
 chdir($dirname);
 
+error_reporting(-1);
+
 header("Content-type: text/plain");
 include_once __DIR__ . "/../../lib/config.php";
 ini_set("include_path", ini_get("include_path").PATH_SEPARATOR.__DIR__.'/..'); // for Cache_Lite
@@ -41,11 +43,11 @@ function queryLogger(&$DB, $query)
 
 function errorHandler($msg, $error)
 {
-	if (!error_reporting()) return;
+	if (!error_reporting() || 4437==error_reporting()) return;
 	$dir = __DIR__. '/';
 	$rpath = str_replace($dir, '', $error['context']);
 	printr($error['message'], "Error");
-	printr($rpath, "Context");
+	//printr($rpath, "Context");
 }
 
 // Debug human-readable output of any variable.

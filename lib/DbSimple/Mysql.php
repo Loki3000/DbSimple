@@ -56,7 +56,7 @@ class DbSimple_Mysql extends DbSimple_Database
         $ok = @mysql_select_db(preg_replace('{^/}s', '', $dsn['path']), $this->link);
         if (!$ok)
             return $this->_setDbError('mysql_select_db()');
-        mysql_query('SET NAMES '.(isset($dsn['enc'])?$dsn['enc']:'UTF8'));
+        mysql_query('SET NAMES '.(isset($dsn['charset'])?$dsn['charset']:'UTF8'));
     }
 
 

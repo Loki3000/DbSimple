@@ -648,7 +648,6 @@ abstract class DbSimple_Database extends DbSimple_LastError
         $this->_setLastError(-1, "No such transform type: $how", $query);
     }
 
-
     /**
      * void _expandPlaceholders(array &$queryAndArgs, bool $useNative=false)
      * Replace placeholders by quoted values.
@@ -1389,7 +1388,6 @@ abstract class DbSimple_LastError
             'context' => $context,
         );
         $this->errmsg = rtrim($msg) . ($context? " at $context" : "");
-
         $this->_logQuery("  -- error #".$code.": ".preg_replace('/(\r?\n)+/s', ' ', $this->errmsg));
 
         if (is_callable($this->errorHandler)) {

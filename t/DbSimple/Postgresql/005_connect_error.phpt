@@ -4,6 +4,7 @@ Postgresql: connection error catching
 --FILE--
 <?php
 $DSN[] = "postgresql://user:pass@127.0.0.1:55555/test";
+$dirname=__DIR__;
 require_once __DIR__ . '/../init.php';
 
 function main(&$DB)
