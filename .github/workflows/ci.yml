@@ -14,10 +14,6 @@ jobs:
     services:
       postgres:
         image: postgres
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test
 
     steps:
       - uses: actions/checkout@v2
@@ -35,6 +31,14 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: mysql
           tools: phpunit/phpunit:9.5
+
+      - name: Create test user
+        run: |
+          sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'"
+
+        - name: Create timetable database
+          run: |
+            sudo -u postgres createdb --owner=test test
 
       - name: Wait for MySQL
         run: sleep 7
