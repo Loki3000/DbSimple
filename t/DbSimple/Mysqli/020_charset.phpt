@@ -23,7 +23,7 @@ array (
   0 => 
   array (
     'Variable_name' => 'character_set_client',
-    'Value' => 'utf8mb3',
+    'Value' => 'utf8mb4',
   ),
 )
 
