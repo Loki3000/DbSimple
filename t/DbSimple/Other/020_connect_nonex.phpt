@@ -15,14 +15,13 @@ $DATABASE->setErrorHandler('databaseErrorHandler');
 function databaseErrorHandler($message, $info)
 {
 	// Если использовалась @, ничего не делать.
-	if (!error_reporting()) return;
+	if (!error_reporting() || 4437==error_reporting()) return;
 	$dir = __DIR__. '/';
 	$rpath = str_replace($dir, '', $info['context']);
 	echo "Error: ".$info['message']."\n";
-	echo "Context: ".$rpath."\n";
+	//echo "Context: ".$rpath."\n";
 	exit();
 }
 ?>
 --EXPECT--
-Error: Access denied for user 'test'@'localhost' to database 'non-existed-db'
-Context: Standard input code line 6
+Error: No such file or directory

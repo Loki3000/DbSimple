@@ -46,5 +46,5 @@ array (
 )
 Array
 (
-    [beea4382f6402c21b926fdb0029d4d26278351e552185ed67702f0c1326535c0] => a:3:{s:10:"invalCache";N;s:6:"result";a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:3:"str";s:1:"a";}}s:4:"rows";a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:3:"str";s:1:"a";}}}
+    [b3ff1a732f33df919cef9869372c6e09278351e552185ed67702f0c1326535c0] => a:3:{s:10:"invalCache";N;s:6:"result";a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:3:"str";s:1:"a";}}s:4:"rows";a:1:{i:0;a:2:{s:2:"id";s:1:"1";s:3:"str";s:1:"a";}}}
 )

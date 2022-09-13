@@ -244,7 +244,7 @@ class DbSimple_Postgresql_Blob implements DbSimple_Blob
     var $id;
     var $database;
 
-    function DbSimple_Postgresql_Blob(&$database, $id=null)
+    function __construct(&$database, $id=null)
     {
         $this->database =& $database;
         $this->database->transaction();

@@ -14,4 +14,3 @@ function main(&$DB)
 --EXPECT--
 Query: 'error'
 Error: 'You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near \'error\' at line 1'
-Context: 'Standard input code line 7'

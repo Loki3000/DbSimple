@@ -1,4 +1,4 @@
-name: DbDimple Testing
+name: DbBimple Testing
 
 on: [push]
 
@@ -9,7 +9,18 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['5.6', '7.4', '8.0', '8.1']
+        php-versions: ['7.4', '8.0', '8.1']
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+          POSTGRES_PORT: 5432
+        ports:
+          - 5432:5432
     
     steps:
       - uses: actions/checkout@v2
@@ -20,12 +31,17 @@ jobs:
         with:
           mysql user: 'test'
           mysql password: 'test'
+          mysql database: 'test'
 
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mysql
           tools: phpunit/phpunit:9.5
+
+
+      - name: Wait for MySQL
+        run: sleep 5
 
       - name: PHPUnit Tests
         run: phpunit
