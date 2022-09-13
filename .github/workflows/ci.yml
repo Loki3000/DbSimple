@@ -32,6 +32,7 @@ jobs:
           mysql user: 'test'
           mysql password: 'test'
           mysql database: 'test'
+          mysql database: 'test'
 
       - uses: shivammathur/setup-php@v2
         with:

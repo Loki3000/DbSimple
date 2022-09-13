@@ -54,4 +54,3 @@ function printr($value, $comment=null)
     var_export($value);
     echo "\n";
 }
-?>
