@@ -26,8 +26,6 @@ class DbSimple_Mysqli extends DbSimple_Database
 {
     var $link;
 
-    protected $_lastQuery;
-
     /**
      * constructor(string $dsn)
      * Connect to MySQL server.
