@@ -24,8 +24,6 @@ require_once __DIR__ . '/Generic.php';
  */
 class DbSimple_Mssql extends DbSimple_Database
 {
-    var $link;
-
     /**
      * constructor(string $dsn)
      * Connect to Mssql.

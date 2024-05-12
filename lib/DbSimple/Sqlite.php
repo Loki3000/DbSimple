@@ -21,7 +21,6 @@ require_once __DIR__.'/Database.php';
  */
 class DbSimple_Sqlite extends DbSimple_Database
 {
-	private $link;
 	public function __construct($dsn)
 	{
 		$connect = 'sqlite_'.((isset($dsn['persist']) && $dsn['persist'])?'p':'').'open';

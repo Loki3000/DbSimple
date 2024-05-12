@@ -22,8 +22,6 @@ require_once __DIR__.'/Database.php';
  */
 class DbSimple_Litepdo extends DbSimple_Database
 {
-	private $link;
-
 	public function __construct($dsn)
 	{
 		if (!class_exists('PDO'))

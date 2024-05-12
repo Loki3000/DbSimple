@@ -34,7 +34,7 @@ interface Zend_Cache_Backend_Interface
      *
      * @param array $directives assoc of directives
      */
-    public function setDirectives($directives);
+    public function setDirectives(array $directives);
 
     /**
      * Test if a cache is available for the given id and (if yes) return it (false else)
@@ -45,7 +45,7 @@ interface Zend_Cache_Backend_Interface
      * @param  boolean $doNotTestCacheValidity If set to true, the cache validity won't be tested
      * @return string|false cached datas
      */
-    public function load($id, $doNotTestCacheValidity = false);
+    public function load($id, bool $doNotTestCacheValidity = false): string|false;
 
     /**
      * Test if a cache is available or not (for the given id)
@@ -53,7 +53,7 @@ interface Zend_Cache_Backend_Interface
      * @param  string $id cache id
      * @return mixed|false (a cache is not available) or "last modified" timestamp (int) of the available cache record
      */
-    public function test($id);
+    public function test($id): int|false;
 
     /**
      * Save some string datas into a cache record
@@ -67,7 +67,7 @@ interface Zend_Cache_Backend_Interface
      * @param  int   $specificLifetime If != false, set a specific lifetime for this cache record (null => infinite lifetime)
      * @return boolean true if no problem
      */
-    public function save($data, $id, $tags = array(), $specificLifetime = false);
+    public function save(mixed $data, $id, array $tags = array(), int|false $specificLifetime = false);
 
     /**
      * Remove a cache record
@@ -75,7 +75,7 @@ interface Zend_Cache_Backend_Interface
      * @param  string $id Cache id
      * @return boolean True if no problem
      */
-    public function remove($id);
+    public function remove($id): bool;
 
     /**
      * Clean some cache records
@@ -94,6 +94,6 @@ interface Zend_Cache_Backend_Interface
      * @param  array  $tags Array of tags
      * @return boolean true if no problem
      */
-    public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array());
+    public function clean(string $mode = Zend_Cache::CLEANING_MODE_ALL, string|array $tags = array());
 
 }

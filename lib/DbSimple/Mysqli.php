@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DbSimple_Mysql: MySQL database.
  * (C) Dk Lab, http://en.dklab.ru
@@ -16,7 +17,7 @@
  *
  * @version 2.x $Id: Mysqli.php 247 2008-08-18 21:17:08Z dk $
  */
-require_once __DIR__.'/Database.php';
+require_once __DIR__ . '/Database.php';
 
 
 /**
@@ -24,72 +25,79 @@ require_once __DIR__.'/Database.php';
  */
 class DbSimple_Mysqli extends DbSimple_Database
 {
-    var $link;
-
     /**
      * constructor(string $dsn)
      * Connect to MySQL server.
      */
     function __construct($dsn)
     {
-        
-        if (!is_callable("mysqli_connect"))
-            return $this->_setLastError("-1", "MySQLi extension is not loaded", "mysqli_connect");
-        
+
+        if (!is_callable("mysqli_connect")) {
+            $this->_setLastError("-1", "MySQLi extension is not loaded", "mysqli_connect");
+            return;
+        }
+
         if (!empty($dsn["persist"])) {
             if (version_compare(PHP_VERSION, '5.3') < 0) {
-                return $this->_setLastError("-1", "Persistent connections in MySQLi is allowable since PHP 5.3", "mysqli_connect");
+                $this->_setLastError(
+                    "-1",
+                    "Persistent connections in MySQLi is allowable since PHP 5.3",
+                    "mysqli_connect"
+                );
+                return;
             } else {
-                $dsn["host"] = "p:".$dsn["host"];
+                $dsn["host"] = "p:" . $dsn["host"];
             }
         }
 
-        try {   
-            if ( isset($dsn['socket']) ) {
+        try {
+            if (isset($dsn['socket'])) {
                 // Socket connection
                 @$this->link = mysqli_connect(
-                    null                                         // host
-                    ,empty($dsn['user']) ? 'root' : $dsn['user'] // user
-                    ,empty($dsn['pass']) ? '' : $dsn['pass']     // password
-                    ,preg_replace('{^/}s', '', $dsn['path'])     // schema
-                    ,null                                        // port
-                    ,$dsn['socket']                              // socket
+                    null, // host
+                    empty($dsn['user']) ? 'root' : $dsn['user'], // user
+                    empty($dsn['pass']) ? '' : $dsn['pass'],
+                    // password
+                    preg_replace('{^/}s', '', $dsn['path']),
+                    // schema
+                    null, // port
+                    $dsn['socket'], // socket
                 );
-            } else if (isset($dsn['host']) ) {
+            } else if (isset($dsn['host'])) {
                 // Host connection
                 @$this->link = mysqli_connect(
-                    $dsn['host']
-                    ,empty($dsn['user']) ? 'root' : $dsn['user']
-                    ,empty($dsn['pass']) ? '' : $dsn['pass']
-                    ,preg_replace('{^/}s', '', $dsn['path'])
-                    ,empty($dsn['port']) ? null : $dsn['port']
+                    $dsn['host'],
+                    empty($dsn['user']) ? 'root' : $dsn['user'],
+                    empty($dsn['pass']) ? '' : $dsn['pass'],
+                    preg_replace('{^/}s', '', $dsn['path']),
+                    empty($dsn['port']) ? null : $dsn['port']
                 );
             } else {
                 throw new Exception();
             }
 
             $this->_resetLastError();
-            if (!$this->link) throw new Exception();
-    
-
-        } catch(Exception $e ) {
-            return $this->_setDbError('mysqli_connect()');
+            if (!$this->link)
+                throw new Exception();
+        } catch (Exception $e) {
+            $this->_setDbError('mysqli_connect()');
+            return;
         }
-        
+
         mysqli_set_charset($this->link, isset($dsn['charset']) ? $dsn['charset'] : 'UTF8');
     }
 
 
-    protected function _performEscape($s, $isIdent=false)
+    protected function _performEscape($s, $isIdent = false)
     {
-        if (!$isIdent)
+        if (!$isIdent) 
             return "'" . mysqli_real_escape_string($this->link, $s) . "'";
         else
             return "`" . str_replace('`', '``', $s) . "`";
     }
 
 
-    protected function _performNewBlob($blobid=null)
+    protected function _performNewBlob($blobid = null)
     {
         return new DbSimple_Mysqli_Blob($this, $blobid);
     }
@@ -99,9 +107,8 @@ class DbSimple_Mysqli extends DbSimple_Database
     {
         $allFields = mysqli_fetch_fields($result);
         $blobFields = array();
-        
-        if (!empty($allFields))
-        {
+
+        if (!empty($allFields)) {
             foreach ($allFields as $field)
                 if (stripos($field["type"], "BLOB") !== false)
                     $blobFields[] = $field["name"];
@@ -121,9 +128,9 @@ class DbSimple_Mysqli extends DbSimple_Database
     }
 
 
-    protected function _performTransaction($parameters=null)
+    protected function _performTransaction($parameters = null)
     {
-        if( function_exists('mysqli_begin_transaction') ) {
+        if (function_exists('mysqli_begin_transaction')) {
             return mysqli_begin_transaction($this->link);
         } else {
             return mysqli_autocommit($this->link, false);
@@ -146,8 +153,7 @@ class DbSimple_Mysqli extends DbSimple_Database
     protected function _performTransformQuery(&$queryMain, $how)
     {
         // If we also need to calculate total number of found rows...
-        switch ($how)
-        {
+        switch ($how) {
             // Prepare total calculation (if possible)
             case 'CALC_TOTAL':
                 $m = null;
@@ -170,17 +176,16 @@ class DbSimple_Mysqli extends DbSimple_Database
     {
         $this->_lastQuery = $queryMain;
         $this->_expandPlaceholders($queryMain, false);
-        try {   
+        try {
             if (!$result = mysqli_query($this->link, $queryMain[0])) {
                 throw new Exception();
             }
-        } catch(Exception $e ) {
+        } catch (Exception $e) {
             return $this->_setDbError($queryMain[0]);
         }
 
         if (!is_object($result)) {
-            if (preg_match('/^\s* INSERT \s+/six', $queryMain[0]))
-            {
+            if (preg_match('/^\s* INSERT \s+/six', $queryMain[0])) {
                 // INSERT queries return generated ID.
                 return mysqli_insert_id($this->link);
             }
@@ -194,19 +199,21 @@ class DbSimple_Mysqli extends DbSimple_Database
     protected function _performFetch($result)
     {
         $row = mysqli_fetch_assoc($result);
-        if (mysqli_error($this->link)) return $this->_setDbError($this->_lastQuery);
-        if ($row === false) return null;
+        if (mysqli_error($this->link))
+            return $this->_setDbError($this->_lastQuery);
+        if ($row === false)
+            return null;
         return $row;
     }
 
 
     protected function _setDbError($query)
     {
-    	if ($this->link) {
-	        return $this->_setLastError(mysqli_errno($this->link), mysqli_error($this->link), $query);
-	    } else {
-	        return $this->_setLastError(mysqli_connect_errno(), mysqli_connect_error(), $query);
-	    }
+        if (isset($this->link)) {
+            return $this->_setLastError(mysqli_errno($this->link), mysqli_error($this->link), $query);
+        } else {
+            return $this->_setLastError(mysqli_connect_errno(), mysqli_connect_error(), $query);
+        }
     }
 }
 
@@ -217,7 +224,7 @@ class DbSimple_Mysqli_Blob implements DbSimple_Blob
     private $blobdata = null;
     private $curSeek = 0;
 
-    public function __construct(&$database, $blobdata=null)
+    public function __construct(&$database, $blobdata = null)
     {
         $this->blobdata = $blobdata;
         $this->curSeek = 0;

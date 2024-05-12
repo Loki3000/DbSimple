@@ -24,8 +24,6 @@ require_once __DIR__.'/Database.php';
  */
 class DbSimple_Mysql extends DbSimple_Database
 {
-    var $link;
-
     /**
      * constructor(string $dsn)
      * Connect to MySQL.

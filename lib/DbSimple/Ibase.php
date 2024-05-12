@@ -35,7 +35,6 @@ class DbSimple_Ibase extends DbSimple_Database
     var $DbSimple_Ibase_BEST_TRANSACTION = IBASE_BEST_TRANSACTION;
     var $DbSimple_Ibase_USE_NATIVE_PHOLDERS = true;
     var $fetchFlags = IBASE_BEST_FETCH;
-    var $link;
     var $trans;
     var $prepareCache = array();
 
@@ -278,7 +277,7 @@ class DbSimple_Ibase_Blob implements DbSimple_Blob
             $this->blob = @ibase_blob_open($this->id);
             if ($this->blob === false) return $this->_setDbError('open');
         } else {
-            $this->blob = @ibase_blob_create($this->database->link);
+            $this->blob = @ibase_blob_create($this->database->getLink());
             if ($this->blob === false) return $this->_setDbError('create');
         }
         return true;

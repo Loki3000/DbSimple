@@ -27,7 +27,6 @@ class DbSimple_Postgresql extends DbSimple_Database
 
     var $DbSimple_Postgresql_USE_NATIVE_PHOLDERS = null;
     var $prepareCache = array();
-    var $link;
 
     /**
      * constructor(string $dsn)
@@ -310,11 +309,11 @@ class DbSimple_Postgresql_Blob implements DbSimple_Blob
 
         // Open or create blob.
         if ($this->id !== null) {
-            $this->blob = @pg_lo_open($this->database->link, $this->id, 'rw');
+            $this->blob = @pg_lo_open($this->database->getLink(), $this->id, 'rw');
             if ($this->blob === false) return $this->_setDbError('open');
         } else {
-            $this->id = @pg_lo_create($this->database->link);
-            $this->blob = @pg_lo_open($this->database->link, $this->id, 'w');
+            $this->id = @pg_lo_create($this->database->getLink());
+            $this->blob = @pg_lo_open($this->database->getLink(), $this->id, 'w');
             if ($this->blob === false) return $this->_setDbError('create');
         }
         return true;

@@ -20,13 +20,13 @@ define('DBSIMPLE_PARENT_KEY', 'PARENT_KEY'); // forrest-based resultset support
  * @method mixed transaction(string $mode=null)
  * @method mixed commit()
  * @method mixed rollback()
- * @method mixed select(string $query [, $arg1] [,$arg2] ...)
- * @method mixed selectRow(string $query [, $arg1] [,$arg2] ...)
- * @method array selectCol(string $query [, $arg1] [,$arg2] ...)
- * @method string selectCell(string $query [, $arg1] [,$arg2] ...)
- * @method mixed query(string $query [, $arg1] [,$arg2] ...)
+ * @method mixed select(string $query,...)
+ * @method mixed selectRow(string $query,...)
+ * @method array selectCol(string $query,...)
+ * @method string selectCell(string $query,...)
+ * @method mixed query(string $query,...)
  * @method string escape(mixed $s, bool $isIdent=false)
- * @method DbSimple_SubQuery subquery(string $query [, $arg1] [,$arg2] ...)
+ * @method DbSimple_SubQuery subquery(string $query,...)
  * @method callback setLogger(callback $logger)
  * @method callback setCacher(callback $cacher)
  * @method string setIdentPrefix($prx)
@@ -34,8 +34,8 @@ define('DBSIMPLE_PARENT_KEY', 'PARENT_KEY'); // forrest-based resultset support
  */
 class DbSimple_Connect
 {
-	/** @var DbSimple_Generic_Database База данных */
-	protected $DbSimple;
+	/** @var DbSimple_Database База данных */
+	protected ?DbSimple_Database $DbSimple;
 	/** @var string DSN подключения */
 	protected $DSN;
 	/** @var string Тип базы данных */
@@ -43,7 +43,7 @@ class DbSimple_Connect
 	/** @var array Что выставить при коннекте */
 	protected $init;
 	/** @var integer код ошибки */
-	public $error = null;
+	public ?array $error = null;
 	/** @var string сообщение об ошибке */
 	public $errmsg = null;
 

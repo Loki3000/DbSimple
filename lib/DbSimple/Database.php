@@ -95,7 +95,12 @@ abstract class DbSimple_Database extends DbSimple_LastError
 {
     protected $attributes;
     protected $_lastQuery;
-    
+    protected false|object $link;
+
+    public function getLink()
+    {
+        return $this->link;
+    }
     /**
      * Public methods.
      */

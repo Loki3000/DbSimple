@@ -22,8 +22,6 @@ require_once __DIR__.'/Database.php';
  */
 class DbSimple_Mypdo extends DbSimple_Database
 {
-	private $link;
-
 	public function __construct($dsn)
 	{
 		$base = preg_replace('{^/}s', '', $dsn['path']);

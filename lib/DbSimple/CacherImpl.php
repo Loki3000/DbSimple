@@ -9,7 +9,7 @@
 
 class CacherImpl implements Zend_Cache_Backend_Interface {
 
-    protected $callback;
+    protected mixed $callback;
 
     public function __construct($callback) {
         if ( is_callable($callback) ) {
