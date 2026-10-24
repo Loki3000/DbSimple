@@ -202,10 +202,12 @@ abstract class Zend_Cache
      * @param  string $msg  Message for the exception
      * @throws Zend_Cache_Exception
      */
-    public static function throwException($msg, Exception $e = null)
+    public static function throwException($msg, ?Exception $e = null)
     {
         // For perfs reasons, we use this dynamic inclusion
-        require_once 'Zend/Cache/Exception.php';
+        if (!class_exists('Zend_Cache_Exception')) {
+            require_once __DIR__ . '/Cache/Exception.php';
+        }
         throw new Zend_Cache_Exception($msg, 0, $e);
     }
 

@@ -10,8 +10,9 @@ function main(&$DB)
 {
 	global $DSN;
 	$db2 = DbSimple_Generic::connect($DSN[0]);
-	if ($DB->link != $db2->link) echo "OK\n"; 
-	else echo "Same link is established for same DSNs: {$DB->link}\n";
+	// PgSql\Connection objects (PHP 8.1+) have no properties, so compare identity
+	if ($DB->getLink() !== $db2->getLink()) echo "OK\n";
+	else echo "Same link is established for same DSNs\n";
 }
 ?>
 

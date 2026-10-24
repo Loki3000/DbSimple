@@ -28,17 +28,29 @@ class DbSimple_Litepdo extends DbSimple_Database
 			return $this->_setLastError("-1", "PDO extension is not loaded", "PDO");
 
 		try {
-			$this->link = new PDO('sqlite:'.$dsn['path']);
+			// Errors are checked by return values: PDO throws exceptions by default since PHP 8.0
+			$options = array(PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT);
+			// Pdo\Sqlite (PHP 8.4+) has createFunction(), PDO::sqliteCreateFunction() is deprecated since PHP 8.5
+			$class = class_exists('Pdo\Sqlite') ? 'Pdo\Sqlite' : 'PDO';
+			$this->link = new $class('sqlite:'.$dsn['path'], null, null, $options);
+			$this->link->exec('SET NAMES '.(isset($dsn['charset'])?$dsn['charset']:'UTF8'));
 		} catch (PDOException $e) {
 			$this->_setLastError($e->getCode() , $e->getMessage(), 'new PDO');
 		}
-		$this->link->exec('SET NAMES '.(isset($dsn['charset'])?$dsn['charset']:'UTF8'));
 	}
 
 	public function CreateFunction($function_name, $callback, $num_args)
-	{	return $this->link->sqliteCreateFunction($function_name, $callback, $num_args); }
+	{
+		if ($this->link instanceof Pdo\Sqlite)
+			return $this->link->createFunction($function_name, $callback, $num_args);
+		return $this->link->sqliteCreateFunction($function_name, $callback, $num_args);
+	}
 	public function CreateAggregate($function_name, $step_func, $finalize_func, $num_args)
-	{	return $this->link->CreateAggregate($function_name, $step_func, $finalize_func, $num_args); }
+	{
+		if ($this->link instanceof Pdo\Sqlite)
+			return $this->link->createAggregate($function_name, $step_func, $finalize_func, $num_args);
+		return $this->link->sqliteCreateAggregate($function_name, $step_func, $finalize_func, $num_args);
+	}
 
 	protected function _performGetPlaceholderIgnoreRe()
 	{

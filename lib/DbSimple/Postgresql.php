@@ -79,7 +79,7 @@ class DbSimple_Postgresql extends DbSimple_Database
     }
 
 
-    function& _performNewBlob($blobid=null)
+    function _performNewBlob($blobid=null)
     {
         return new DbSimple_Postgresql_Blob($this, $blobid);
     }
@@ -304,8 +304,8 @@ class DbSimple_Postgresql_Blob implements DbSimple_Blob
     // Called on each blob use (reading or writing).
     function _firstUse()
     {
-        // BLOB opened - do nothing.
-        if (is_resource($this->blob)) return true;
+        // BLOB opened - do nothing (PgSql\Lob object since PHP 8.1, resource before).
+        if ($this->blob) return true;
 
         // Open or create blob.
         if ($this->id !== null) {

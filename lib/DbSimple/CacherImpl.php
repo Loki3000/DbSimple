@@ -15,29 +15,40 @@ class CacherImpl implements Zend_Cache_Backend_Interface {
         if ( is_callable($callback) ) {
             $this->callback = $callback;
         } else {
-            $this->callback = $this->callbackDummy;
+            $this->callback = array($this, 'callbackDummy');
         }
     }
 
+    // Parameters are left untyped and only return types are declared, so the class
+    // stays compatible both with the typed Zend_Cache_Backend_Interface bundled here
+    // and with an untyped one (Zend Framework 1) loaded by the application before us.
+
     public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array()) {}
 
-    public function remove($id) {}
+    public function remove($id): bool
+    {
+        return false;
+    }
 
-    public function test($id) {}
+    public function test($id): int|false
+    {
+        return false;
+    }
 
     public function save($data, $id, $tags = array(), $specificLifetime = false)
     {
         return call_user_func($this->callback, $id, $data);
     }
 
-    public function load($id, $doNotTestCacheValidity = false)
+    public function load($id, $doNotTestCacheValidity = false): string|false
     {
-        return call_user_func($this->callback, $id);
+        $data = call_user_func($this->callback, $id);
+        return is_string($data) ? $data : false;
     }
 
     public function setDirectives($directives) {}
 
-    protected function callbackDummy($k, $v)
+    protected function callbackDummy($k, $v = null)
     {
         return null;
     }

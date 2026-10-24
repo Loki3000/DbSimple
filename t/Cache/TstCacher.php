@@ -24,7 +24,7 @@ class TstCacher implements Zend_Cache_Backend_Interface
 	 * @param  boolean $doNotTestCacheValidity If set to true, the cache validity won't be tested
 	 * @return string|false cached datas
 	 */
-	public function load($id, $doNotTest = false)
+	public function load($id, $doNotTest = false): string|false
 	{
 		if (!array_key_exists($id,$this->c))
 			return false;
@@ -61,7 +61,7 @@ class TstCacher implements Zend_Cache_Backend_Interface
 	 * @param  string $id cache id
 	 * @return mixed|false (a cache is not available) or "last modified" timestamp (int) of the available cache record
 	 */
-	public function test($id)
+	public function test($id): int|false
 	{
 		return $this->load($id) === false;
 	}
@@ -93,10 +93,11 @@ class TstCacher implements Zend_Cache_Backend_Interface
 	 * @param  string $id Cache id
 	 * @return boolean True if no problem
 	 */
-	public function remove($id)
+	public function remove($id): bool
 	{
 		unset($this->t[$id]);
 		unset($this->c[$id]);
+		return true;
 	}
 
 	/**

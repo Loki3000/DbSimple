@@ -7,41 +7,48 @@ jobs:
     name: PHP ${{ matrix.php-versions }} Tests
     runs-on: ${{ matrix.operating-system }}
     strategy:
+      fail-fast: false
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4', '8.0', '8.1', '8.2']
+        php-versions: ['8.2', '8.3', '8.4', '8.5']
     services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test
+          MYSQL_USER: test
+          MYSQL_PASSWORD: test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
       postgres:
         image: postgres
         env:
-          POSTGRES_HOST: localhost
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
           POSTGRES_DB: test
-          POSTGRES_PORT: 5432
         ports:
           - 5432:5432
-    
+        options: >-
+          --health-cmd=pg_isready
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
     steps:
-      - uses: actions/checkout@v2
-
-      - uses: php-actions/composer@v5
-
-      - uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql user: 'test'
-          mysql password: 'test'
-          mysql database: 'test'
+      - uses: actions/checkout@v4
 
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mysql
-          tools: phpunit/phpunit:9.5
-
-
-      - name: Wait for MySQL
-        run: sleep 5
+          extensions: mysqli, pdo_mysql, pgsql
+          coverage: none
+          tools: phpunit:11.5
 
       - name: PHPUnit Tests
         run: phpunit

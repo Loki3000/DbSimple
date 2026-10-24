@@ -6,7 +6,7 @@ require_once __DIR__."/../../../lib/config.php";
 require_once "DbSimple/Generic.php";
 
 // Подключаемся к БД.
-$DATABASE = DbSimple_Generic::connect('mysqli://test:test@localhost/non-existed-db');
+$DATABASE = DbSimple_Generic::connect('mysqli://test:test@127.0.0.1/non-existed-db');
 
 // Устанавливаем обработчик ошибок.
 $DATABASE->setErrorHandler('databaseErrorHandler');
@@ -23,5 +23,5 @@ function databaseErrorHandler($message, $info)
 	exit();
 }
 ?>
---EXPECT--
-Error: No such file or directory
+--EXPECTF--
+Error: Access denied for user 'test'@'%s' to database 'non-existed-db'

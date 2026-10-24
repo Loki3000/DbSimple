@@ -339,7 +339,7 @@ abstract class DbSimple_Database extends DbSimple_LastError
      * массив поле=>значение для этой строки
      *
      * @param string $name имя класса
-     * @return DbSimple_Generic_Database указатель на себя
+     * @return DbSimple_Database указатель на себя
      */
     public function setClassName($name)
     {
@@ -577,7 +577,7 @@ abstract class DbSimple_Database extends DbSimple_LastError
                 $blobFieldNames = $this->_performGetBlobFieldNames($result);
                 foreach ($blobFieldNames as $name) {
                     for ($r = count($rows)-1; $r>=0; $r--) {
-                        $rows[$r][$name] =& $this->_performNewBlob($rows[$r][$name]);
+                        $rows[$r][$name] = $this->_performNewBlob($rows[$r][$name]);
                     }
                 }
             }
@@ -1057,7 +1057,7 @@ abstract class DbSimple_Database extends DbSimple_LastError
      * Convert SQL field-list to COUNT(...) clause
      * (e.g. 'DISTINCT a AS aa, b AS bb' -> 'COUNT(DISTINCT a, b)').
      */
-    private function _fieldList2Count($fields)
+    protected function _fieldList2Count($fields)
     {
         $m = null;
         if (preg_match('/^\s* DISTINCT \s* (.*)/sx', $fields, $m)) {
@@ -1157,7 +1157,8 @@ abstract class DbSimple_Database extends DbSimple_LastError
             }
             $pid = $row[$pidName];
             if ($id == $pid) $pid = null;
-            $children[$pid][$id] =& $row;
+            // null as array offset is deprecated since PHP 8.5, it always meant ''
+            $children[$pid ?? ''][$id] =& $row;
             if (!isset($children[$id])) $children[$id] = array();
             $row['childNodes'] =& $children[$id];
             $ids[$id] = true;
@@ -1169,8 +1170,8 @@ abstract class DbSimple_Database extends DbSimple_LastError
             $id = $row[$idName];
             $pid = $row[$pidName];
             if ($pid == $id) $pid = null;
-            if (!isset($ids[$pid])) {
-                $forest[$row[$idName]] =& $row;
+            if (!isset($ids[$pid ?? ''])) {
+                $forest[$id ?? ''] =& $row;
             }
             unset($row[$idName]);
             unset($row[$pidName]);
@@ -1340,7 +1341,7 @@ class DbSimple_SubQuery
     /**
      * Возвращает сам запрос и добавляет плейсхолдеры в массив переданный по ссылке
      *
-     * @param &array|null - ссылка на массив плейсхолдеров
+     * @param array|null $ph ссылка на массив плейсхолдеров
      * @return string
      */
     public function get(&$ph)

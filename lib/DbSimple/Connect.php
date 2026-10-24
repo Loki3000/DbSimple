@@ -3,13 +3,16 @@
 /**
  * Используйте константу DBSIMPLE_SKIP в качестве подстановочного значения чтобы пропустить опцональный SQL блок.
  */
-define('DBSIMPLE_SKIP', log(0));
+if (!defined('DBSIMPLE_SKIP'))
+	define('DBSIMPLE_SKIP', log(0));
 /**
  * Имена специализированных колонок в резальтате,
  * которые используются как ключи в результирующем массиве
  */
-define('DBSIMPLE_ARRAY_KEY', 'ARRAY_KEY');   // hash-based resultset support
-define('DBSIMPLE_PARENT_KEY', 'PARENT_KEY'); // forrest-based resultset support
+if (!defined('DBSIMPLE_ARRAY_KEY'))
+	define('DBSIMPLE_ARRAY_KEY', 'ARRAY_KEY');   // hash-based resultset support
+if (!defined('DBSIMPLE_PARENT_KEY'))
+	define('DBSIMPLE_PARENT_KEY', 'PARENT_KEY'); // forrest-based resultset support
 
 /**
  * Класс обертка для DbSimple
@@ -17,18 +20,18 @@ define('DBSIMPLE_PARENT_KEY', 'PARENT_KEY'); // forrest-based resultset support
  * <br>нужен для ленивой инициализации коннекта к базе
  *
  * @package DbSimple
- * @method mixed transaction(string $mode=null)
+ * @method mixed transaction(?string $mode=null)
  * @method mixed commit()
  * @method mixed rollback()
- * @method mixed select(string $query,...)
- * @method mixed selectRow(string $query,...)
- * @method array selectCol(string $query,...)
- * @method string selectCell(string $query,...)
- * @method mixed query(string $query,...)
+ * @method mixed select(string $query, mixed ...$args)
+ * @method mixed selectRow(string $query, mixed ...$args)
+ * @method array selectCol(string $query, mixed ...$args)
+ * @method string selectCell(string $query, mixed ...$args)
+ * @method mixed query(string $query, mixed ...$args)
  * @method string escape(mixed $s, bool $isIdent=false)
- * @method DbSimple_SubQuery subquery(string $query,...)
- * @method callback setLogger(callback $logger)
- * @method callback setCacher(callback $cacher)
+ * @method DbSimple_SubQuery subquery(string $query, mixed ...$args)
+ * @method callable|null setLogger(callable|null $logger)
+ * @method Zend_Cache_Backend_Interface|null setCacher(?Zend_Cache_Backend_Interface $cacher=null)
  * @method string setIdentPrefix($prx)
  * @method string setCachePrefix($prx)
  */
@@ -42,7 +45,7 @@ class DbSimple_Connect
 	protected $shema;
 	/** @var array Что выставить при коннекте */
 	protected $init;
-	/** @var integer код ошибки */
+	/** @var array|null информация об ошибке (код, сообщение, запрос, контекст) */
 	public ?array $error = null;
 	/** @var string сообщение об ошибке */
 	public $errmsg = null;
@@ -173,10 +176,10 @@ class DbSimple_Connect
 	 * - сообщение об ошибке
 	 * - массив (код, сообщение, запрос, контекст)
 	 *
-	 * @param callback|null|false $handler обработчик ошибок
+	 * @param callable|null|false $handler обработчик ошибок
 	 * <br>  null - по умолчанию
 	 * <br>  false - отключен
-	 * @return callback|null|false предыдущий обработчик
+	 * @return callable|null|false предыдущий обработчик
 	 */
 	public function setErrorHandler($handler)
 	{
@@ -187,7 +190,7 @@ class DbSimple_Connect
 		return $prev;
 	}
 
-	/** @var callback обработчик ошибок */
+	/** @var callable|null|false обработчик ошибок */
 	private $errorHandler = null;
 	private $_cachePrefix = '';
 	private $_identPrefix = null;
@@ -213,7 +216,7 @@ class DbSimple_Connect
 	 * Set cache mechanism called during each query if specified.
 	 * Returns previous handler.
 	 */
-	public function setCacher(Zend_Cache_Backend_Interface $cacher=null)
+	public function setCacher(?Zend_Cache_Backend_Interface $cacher=null)
 	{
 		$prev = $this->_cacher;
 		$this->_cacher = $cacher;

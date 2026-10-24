@@ -13,7 +13,7 @@ DbSimple introduces the interface much more simple and handy than above
 
 MAIN FEATURES
 
-* Supports PHP 5, DBMS: MySQL, PostgreSQL, InterBase/FireBird.
+* Supports PHP 8.2+, DBMS: MySQL (mysqli, PDO), PostgreSQL, SQLite (PDO).
 * Simple and laconic interface (see samples below).
 * Conditional macro-blocks in SQL body ({}-blocks), which allow to 
   dynamically generate even very complex queries without detriment to 
@@ -312,7 +312,7 @@ foreach ($array as $item) {
 Listing 21: Error handling
 
 // File connect.php
-$DB = DbSimple_Generic::connect('mysql://test:test@localhost1/non-existed-db');
+$DB = DbSimple_Generic::connect('mysqli://test:test@localhost1/non-existed-db');
 $DB->setErrorHandler('databaseErrorHandler');
 
 function databaseErrorHandler($message, $info)

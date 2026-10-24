@@ -107,11 +107,13 @@ class DbSimple_Mysqli extends DbSimple_Database
     {
         $allFields = mysqli_fetch_fields($result);
         $blobFields = array();
+        // mysqli reports TEXT columns as BLOB types too, as mysql_field_type() did
+        $blobTypes = array(MYSQLI_TYPE_TINY_BLOB, MYSQLI_TYPE_BLOB, MYSQLI_TYPE_MEDIUM_BLOB, MYSQLI_TYPE_LONG_BLOB);
 
         if (!empty($allFields)) {
             foreach ($allFields as $field)
-                if (stripos($field["type"], "BLOB") !== false)
-                    $blobFields[] = $field["name"];
+                if (in_array($field->type, $blobTypes))
+                    $blobFields[] = $field->name;
         }
         return $blobFields;
     }
@@ -209,7 +211,7 @@ class DbSimple_Mysqli extends DbSimple_Database
 
     protected function _setDbError($query)
     {
-        if (isset($this->link)) {
+        if (!empty($this->link)) {
             return $this->_setLastError(mysqli_errno($this->link), mysqli_error($this->link), $query);
         } else {
             return $this->_setLastError(mysqli_connect_errno(), mysqli_connect_error(), $query);

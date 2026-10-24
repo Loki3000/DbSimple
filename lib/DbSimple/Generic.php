@@ -92,7 +92,7 @@ class DbSimple_Generic
      *
      * Connection by host also can be made with this syntax.
      * Or you can use old syntax:
-     * $dsn = 'mysql://testuser:mypassword@127.0.0.1/testdb';
+     * $dsn = 'mysqli://testuser:mypassword@127.0.0.1/testdb';
      *
      */
     public static function connect($dsn)
@@ -109,8 +109,8 @@ class DbSimple_Generic
             if (is_file($file)) {
                 require_once($file);
             } else {
-                trigger_error("Error loading database driver: no file $file", E_USER_ERROR);
-                return null;
+                // trigger_error() with E_USER_ERROR is deprecated since PHP 8.4
+                throw new RuntimeException("Error loading database driver: no file $file");
             }
         }
         $object = new $class($parsed);
